@@ -27,6 +27,7 @@ pipeline {
       }
       steps {
         sh "echo .. deploying qa"
+        sh "graddle build"
       }
     }
     stage('Build Release') {
