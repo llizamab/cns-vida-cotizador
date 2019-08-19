@@ -26,8 +26,10 @@ pipeline {
         branch 'develop'
       }
       steps {
-        sh "echo .. deploying qa"
-        sh "graddle build"
+	container('gradle') {
+	   sh "echo .. deploying qa"
+	   sh "graddle build"
+	}
       }
     }
     stage('Build Release') {
@@ -40,7 +42,7 @@ pipeline {
           sh "git checkout master"
           sh "git config --global credential.helper store"
           
-		  sh "echo 'on master...'"
+	  sh "echo 'on master...'"
         }
       }
     }
