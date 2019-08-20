@@ -18,8 +18,10 @@ pipeline {
         container('gradle') {
           sh "echo 'on PR-*...' - version $PREVIEW_VERSION"
           sh "gradle build"
+	  sh "ls -ltr"
 	}
 	container('docker') {
+          sh "ls -ltr"
           sh "docker build . -t $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
 	  sh "docker push $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
 	}
