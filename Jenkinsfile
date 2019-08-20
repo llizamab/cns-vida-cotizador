@@ -18,11 +18,13 @@ pipeline {
         container('gradle') {
           sh "echo 'on PR-*...' - version $PREVIEW_VERSION"
           sh "gradle build"
-	  sh "ls -R"
 	}
 	container('docker') {
           sh "ls -ltr build/libs"
           sh "docker build . -t $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
+	  sh "wget https://s3-us-west-2.amazonaws.com/cdn.apside.cl/ca.crt"
+	  sh "mkdir /etc/docker/certs.d/cdn.apside.cl/"
+	  sh "mv ca.crt /etc/docker/certs.d/cdn.apside.cl/ca.crt"
 	  sh "docker push $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
 	}
       }
