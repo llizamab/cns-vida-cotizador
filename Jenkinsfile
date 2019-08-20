@@ -21,7 +21,7 @@ pipeline {
 	  sh "ls -ltr"
 	}
 	container('docker') {
-          sh "ls -ltr"
+          sh "ls -ltr build/"
           sh "docker build . -t $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
 	  sh "docker push $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
 	}
