@@ -18,10 +18,9 @@ pipeline {
         container('gradle') {
           sh "echo 'on PR-*...' - version $PREVIEW_VERSION"
           sh "gradle build"
-          sh "docker build . -t $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
-	  sh "docker push $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
-          //sh "docker tag SOURCE_IMAGE[:TAG] harbor.apside.info/cns-vida-cotizador/IMAGE[:TAG]"
-        }
+	}
+        sh "docker build . -t $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
+	sh "docker push $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
       }
     }
     stage('Deploy QA') {
