@@ -23,7 +23,7 @@ pipeline {
 	  script {
             def scannerHome = tool 'sonar-scaner';
             withSonarQubeEnv('sonar-apside') {
-              sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey='$APP_NAME' -Dsonar.projectName='$APP_NAME' -Dsonar.sources=./src"
+              sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey='$APP_NAME' -Dsonar.projectName='$APP_NAME' -Dsonar.sources=./src -Dsonar.java.binaries=./build/classes"
             }
 	  }
 	}
