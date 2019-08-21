@@ -21,7 +21,15 @@ pipeline {
 	}
 	container('docker') {
 	  // sonar scaner
-	  sh "docker run -v \$(pwd):/usr/src newtmitch/sonar-scanner sonar-scanner -Dsonar.host.url='$SONAR_URL' -Dsonar.projectKey='$APP_NAME' -Dsonar.projectName='$APP_NAME' -Dsonar.projectVersion=1 -Dsonar.projectBaseDir=/usr -Dsonar.sources=./src"
+	  sh """
+	  docker run -v \$(pwd):/usr/src newtmitch/sonar-scanner sonar-scanner \
+            -Dsonar.host.url='$SONAR_URL' \
+            -Dsonar.projectKey='$APP_NAME' \
+            -Dsonar.projectName='$APP_NAME' \
+            -Dsonar.projectVersion=1 \
+            -Dsonar.projectBaseDir=/usr \
+            -Dsonar.sources=./src
+	  """
 
           sh "ls -ltr build/libs"
           sh "docker build . -t $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
