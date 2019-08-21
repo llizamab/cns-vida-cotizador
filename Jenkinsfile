@@ -18,8 +18,7 @@ pipeline {
         container('gradle') {
           sh "echo 'on PR-*...' - version $PREVIEW_VERSION"
           sh "gradle build"
-	}
-	container('docker') {
+
 	  // sonar scaner
 	  script {
             def scannerHome = tool 'sonar-scaner';
@@ -27,6 +26,8 @@ pipeline {
               sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey='$APP_NAME' -Dsonar.projectName='$APP_NAME' -Dsonar.sources=./src"
             }
 	  }
+	}
+	container('docker') {
           sh "ls -ltr build/libs"
           sh "docker build . -t $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
 	  sh "wget https://s3-us-west-2.amazonaws.com/cdn.apside.cl/ca.crt"
