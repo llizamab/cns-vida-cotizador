@@ -25,6 +25,11 @@ pipeline {
 	  sh "wget https://s3-us-west-2.amazonaws.com/cdn.apside.cl/ca.crt"
 	  sh "mkdir -p /etc/docker/certs.d/harbor.apside.info/"
 	  sh "mv ca.crt /etc/docker/certs.d/harbor.apside.info/ca.crt"
+
+	  withCredentials([usernamePassword(credentialsId: 'harbor-admin', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+            sh "docker login --username=$USER --password=$PASS $DOCKER_REGISTRY"
+          }
+
 	  sh "docker push $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
 	}
       }
