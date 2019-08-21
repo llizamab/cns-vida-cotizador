@@ -37,7 +37,7 @@ public class CotizadorController {
         } catch (Exception excp) {
         	
         }
-        return String.format(template, ip));
+        return String.format(template, ip);
     }
 
 
