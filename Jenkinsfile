@@ -16,29 +16,24 @@ pipeline {
       }
       steps {
         container('gradle') {
-          stage('gradle build') {
-            sh "echo 'on PR-*...' - version $PREVIEW_VERSION"
-            sh "gradle build"
-	  }
+          sh "echo 'on PR-*...' - version $PREVIEW_VERSION"
+          sh "gradle build"
 	}
 	container('docker') {
 	  // sonar scaner
-	  stage('sonar scan') {
-	   sh "docker run -v \$(pwd):/usr/src newtmitch/sonar-scanner sonar-scanner -Dsonar.host.url=$SONAR_URL -Dsonar.projectKey=$APP_NAME -Dsonar.projectName=$APP_NAME -Dsonar.projectVersion=1 -Dsonar.projectBaseDir=/usr -Dsonar.sources=./src "
-	  }
+	  sh "docker run -v \$(pwd):/usr/src newtmitch/sonar-scanner sonar-scanner -Dsonar.host.url=$SONAR_URL -Dsonar.projectKey=$APP_NAME -Dsonar.projectName=$APP_NAME -Dsonar.projectVersion=1 -Dsonar.projectBaseDir=/usr -Dsonar.sources=./src "
+
           sh "ls -ltr build/libs"
-          stage('image build') {
-            sh "docker build . -t $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
-	    sh "wget https://s3-us-west-2.amazonaws.com/cdn.apside.cl/ca.crt"
-	    sh "mkdir -p /etc/docker/certs.d/harbor.apside.info/"
-	    sh "mv ca.crt /etc/docker/certs.d/harbor.apside.info/ca.crt"
+          sh "docker build . -t $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
+	  sh "wget https://s3-us-west-2.amazonaws.com/cdn.apside.cl/ca.crt"
+	  sh "mkdir -p /etc/docker/certs.d/harbor.apside.info/"
+	  sh "mv ca.crt /etc/docker/certs.d/harbor.apside.info/ca.crt"
 
-	    withCredentials([usernamePassword(credentialsId: 'harbor-admin', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-              sh "docker login --username=$USER --password=$PASS $DOCKER_REGISTRY"
-            }
+	  withCredentials([usernamePassword(credentialsId: 'harbor-admin', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+            sh "docker login --username=$USER --password=$PASS $DOCKER_REGISTRY"
+          }
 
-	    sh "docker push $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
-	  }
+	  sh "docker push $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
 	}
       }
     }
@@ -66,6 +61,14 @@ pipeline {
 	  sh "echo 'on master...'"
         }
       }
+    }
+  }
+  post {
+    success {
+      echo 'Todo OK!'
+    }
+    failure {
+       echo 'Notificar que algo ha fallado'
     }
   }
 }
