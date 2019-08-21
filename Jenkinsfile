@@ -27,7 +27,7 @@ pipeline {
 
 	  sh """
 	  docker run -v \$(pwd):/usr/src \
-            -v \$(pwd)/sonar-runner.properties:/usr/lib/sonar-scanner/conf/sonar-scanner.properties
+            -v \$(pwd)/sonar-runner.properties:/usr/lib/sonar-scanner/conf/sonar-scanner.properties \
 	     newtmitch/sonar-scanner sonar-scanner
 	  """
 
