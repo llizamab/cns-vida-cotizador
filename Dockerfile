@@ -8,4 +8,4 @@ EXPOSE 8080
 # we could do with a better way to know the name - or to always create an app.jar or something
 COPY build/libs/*.jar /opt/app.jar
 WORKDIR /opt
-CMD ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-jar", "app.jar"]
+CMD ["java", "-jar", "app.jar"]
