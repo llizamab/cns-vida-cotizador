@@ -18,6 +18,14 @@ pipeline {
         container('gradle') {
           sh "echo 'on PR-*...' - version $PREVIEW_VERSION"
           sh "gradle build"
+
+	  // sonar scaner
+	  script {
+            def scannerHome = tool 'sonar-scaner';
+            withSonarQubeEnv('sonar-apside') {
+              sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey='$APP_NAME' -Dsonar.projectName='$APP_NAME' -Dsonar.sources=./src -Dsonar.java.binaries=./build/classes"
+            }
+	  }
 	}
 	container('docker') {
           sh "ls -ltr build/libs"
@@ -58,6 +66,14 @@ pipeline {
 	  sh "echo 'on master...'"
         }
       }
+    }
+  }
+  post {
+    success {
+      echo 'Todo OK!'
+    }
+    failure {
+       echo 'Notificar que algo ha fallado'
     }
   }
 }
