@@ -21,10 +21,12 @@ pipeline {
 	}
 	container('docker') {
 	  // sonar scaner
-          def scannerHome = tool 'sonar-scaner';
-          withSonarQubeEnv('sonar-apside') {
-            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey='$APP_NAME' -Dsonar.projectName='$APP_NAME' -Dsonar.sources=./src"
-          }
+	  script {
+            def scannerHome = tool 'sonar-scaner';
+            withSonarQubeEnv('sonar-apside') {
+              sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey='$APP_NAME' -Dsonar.projectName='$APP_NAME' -Dsonar.sources=./src"
+            }
+	  }
           sh "ls -ltr build/libs"
           sh "docker build . -t $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
 	  sh "wget https://s3-us-west-2.amazonaws.com/cdn.apside.cl/ca.crt"
