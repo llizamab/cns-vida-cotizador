@@ -21,14 +21,14 @@ pipeline {
 	}
 	container('docker') {
 	  // sonar scaner
+	  configFileProvider([configFile(fileId: 'sonar-properties', variable: 'FILE')]) {
+           sh "cat $FILE > sonar-runner.properties"
+          }
+
 	  sh """
-	  docker run -v \$(pwd):/usr/src newtmitch/sonar-scanner sonar-scanner \
-            -Dsonar.host.url='$SONAR_URL' \
-            -Dsonar.projectKey='$APP_NAME' \
-            -Dsonar.projectName='$APP_NAME' \
-            -Dsonar.projectVersion=1 \
-            -Dsonar.projectBaseDir=/usr \
-            -Dsonar.sources=./src
+	  docker run -v \$(pwd):/usr/src \
+            -v \$(pwd)/sonar-runner.properties:/usr/lib/sonar-scanner/conf/sonar-scanner.properties
+	     newtmitch/sonar-scanner sonar-scanner
 	  """
 
           sh "ls -ltr build/libs"
