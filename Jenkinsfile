@@ -23,7 +23,7 @@ pipeline {
           sh "ls -ltr build/libs"
           sh "docker build . -t $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
 	  sh "wget https://s3-us-west-2.amazonaws.com/cdn.apside.cl/ca.crt"
-	  sh "mkdir /etc/docker/certs.d/harbor.apside.info/"
+	  sh "mkdir -p /etc/docker/certs.d/harbor.apside.info/"
 	  sh "mv ca.crt /etc/docker/certs.d/harbor.apside.info/ca.crt"
 	  sh "docker push $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
 	}
