@@ -22,13 +22,12 @@ pipeline {
 	container('docker') {
 	  // sonar scaner
 	  configFileProvider([configFile(fileId: 'sonar-properties', variable: 'FILE')]) {
-           sh "cat $FILE > sonar-runner.properties"
+           sh "cat $FILE > sonar-scanner.properties"
           }
-	  sh "cat sonar-runner.properties"
 
 	  sh """
 	  docker run -v \$(pwd):/usr/src \
-            -v \$(pwd)/sonar-runner.properties:/usr/lib/sonar-scanner/conf/sonar-scanner.properties \
+            -v \$(pwd):/usr/lib/sonar-scanner/conf \
 	     newtmitch/sonar-scanner sonar-scanner
 	  """
 
