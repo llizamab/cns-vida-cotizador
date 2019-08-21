@@ -24,6 +24,7 @@ pipeline {
 	  configFileProvider([configFile(fileId: 'sonar-properties', variable: 'FILE')]) {
            sh "cat $FILE > sonar-runner.properties"
           }
+	  sh "cat sonar-runner.properties"
 
 	  sh """
 	  docker run -v \$(pwd):/usr/src \
