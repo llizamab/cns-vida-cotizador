@@ -21,16 +21,10 @@ pipeline {
 	}
 	container('docker') {
 	  // sonar scaner
-	  configFileProvider([configFile(fileId: 'sonar-properties', variable: 'FILE')]) {
-           sh "cat $FILE > sonar-scanner.properties"
+          def scannerHome = tool 'sonar-scaner';
+          withSonarQubeEnv('sonar-apside') {
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey='$APP_NAME' -Dsonar.projectName='$APP_NAME' -Dsonar.sources=./src"
           }
-
-	  sh """
-	  docker run -v \$(pwd):/usr/src \
-            -v \$(pwd):/usr/lib/sonar-scanner/conf \
-	     newtmitch/sonar-scanner sonar-scanner
-	  """
-
           sh "ls -ltr build/libs"
           sh "docker build . -t $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
 	  sh "wget https://s3-us-west-2.amazonaws.com/cdn.apside.cl/ca.crt"
