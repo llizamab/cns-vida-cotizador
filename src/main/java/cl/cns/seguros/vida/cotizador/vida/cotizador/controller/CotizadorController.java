@@ -18,7 +18,7 @@ import java.net.InetAddress;
 @RestController
 public class CotizadorController {
 
-    private static final String template = "Hello, %s!";
+    private static final String template = "Hello, from %s! v2";
 
     private final AtomicLong counter = new AtomicLong();
 
