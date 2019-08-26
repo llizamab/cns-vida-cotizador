@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
 @RestController
 public class CotizadorController {
 
-    private static final String template = "Hello, %s!";
+    private static final String template = "Hello, from %s! v2";
 
     private final AtomicLong counter = new AtomicLong();
 
@@ -25,6 +28,17 @@ public class CotizadorController {
         this.gitHubService = gitHubService;
     }
 
+    @RequestMapping("/test")
+    public String testMessage() {
+        String ip = "";
+		try(final DatagramSocket socket = new DatagramSocket()) {
+            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+             ip = socket.getLocalAddress().getHostAddress();
+        } catch (Exception excp) {
+        	
+        }
+        return String.format(template, ip);
+    }
 
 
     @RequestMapping("/testCircuitPersonalizado")
