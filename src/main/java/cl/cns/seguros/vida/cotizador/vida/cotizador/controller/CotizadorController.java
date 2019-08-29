@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -40,6 +42,14 @@ public class CotizadorController {
         return String.format(template, ip);
     }
 
+@Bean
+public CommonsRequestLoggingFilter requestLoggingFilter() {
+    CommonsRequestLoggingFilter loggingFilter = new CommonsRequestLoggingFilter();
+    loggingFilter.setIncludeClientInfo(true);
+    loggingFilter.setIncludeQueryString(true);
+    loggingFilter.setIncludePayload(true);
+    return loggingFilter;
+}
 
     @RequestMapping("/testCircuitPersonalizado")
     public List<ContributorGithub> testCircuitPersonalizado(@RequestParam(value="name", defaultValue="World") String name) {
