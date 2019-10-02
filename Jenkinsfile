@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label "jenkins-gradle"
+    label "jenkins-gradle2"
   }
   environment {
     ORG = 'cns-vida-cotizador'
@@ -20,21 +20,21 @@ pipeline {
           sh "gradle build"
 
 	  // sonar scaner
-	  script {
-            def scannerHome = tool 'sonar-scaner';
-            withSonarQubeEnv('sonar-apside') {
-              sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey='$APP_NAME' -Dsonar.projectName='$APP_NAME' -Dsonar.sources=./src -Dsonar.java.binaries=./build/classes"
-            }
-	  }
+//	  script {
+//            def scannerHome = tool 'sonar-scaner';
+//            withSonarQubeEnv('sonar-apside') {
+ //             sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey='$APP_NAME' -Dsonar.projectName='$APP_NAME' -Dsonar.sources=./src -Dsonar.java.binaries=./build/classes"
+ //           }
+//	  }
 	}
 	container('docker') {
           sh "ls -ltr build/libs"
           sh "docker build . -t $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
-	  sh "wget https://s3-us-west-2.amazonaws.com/cdn.apside.cl/ca.crt"
-	  sh "mkdir -p /etc/docker/certs.d/harbor.apside.info/"
-	  sh "mv ca.crt /etc/docker/certs.d/harbor.apside.info/ca.crt"
+	//  sh "wget https://s3-us-west-2.amazonaws.com/cdn.apside.cl/ca.crt"
+	//  sh "mkdir -p /etc/docker/certs.d/harbor.apside.info/"
+	//  sh "mv ca.crt /etc/docker/certs.d/harbor.apside.info/ca.crt"
 
-	  withCredentials([usernamePassword(credentialsId: 'harbor-admin', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+	  withCredentials([usernamePassword(credentialsId: 'harbor-admin2', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
             sh "docker login --username=$USER --password=$PASS $DOCKER_REGISTRY"
           }
 
